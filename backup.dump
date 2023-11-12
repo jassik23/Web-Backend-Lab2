@@ -1,0 +1,1780 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 16.0 (Debian 16.0-1.pgdg120+1)
+-- Dumped by pg_dump version 16.0 (Debian 16.0-1.pgdg120+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: new_public; Type: SCHEMA; Schema: -; Owner: admin
+--
+
+CREATE SCHEMA new_public;
+
+
+ALTER SCHEMA new_public OWNER TO admin;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: admin
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+ALTER SCHEMA public OWNER TO admin;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: admin
+--
+
+COMMENT ON SCHEMA public IS '';
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: contracts; Type: TABLE; Schema: new_public; Owner: admin
+--
+
+CREATE TABLE new_public.contracts (
+    contract_id bigint NOT NULL,
+    contract_date_begin timestamp without time zone,
+    contract_date_end timestamp without time zone,
+    education_date_start timestamp without time zone,
+    education_date_end timestamp without time zone,
+    contract_price integer,
+    creator_id integer
+);
+
+
+ALTER TABLE new_public.contracts OWNER TO admin;
+
+--
+-- Name: contracts_contract_id_seq; Type: SEQUENCE; Schema: new_public; Owner: admin
+--
+
+CREATE SEQUENCE new_public.contracts_contract_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE new_public.contracts_contract_id_seq OWNER TO admin;
+
+--
+-- Name: contracts_contract_id_seq; Type: SEQUENCE OWNED BY; Schema: new_public; Owner: admin
+--
+
+ALTER SEQUENCE new_public.contracts_contract_id_seq OWNED BY new_public.contracts.contract_id;
+
+
+--
+-- Name: customer; Type: TABLE; Schema: new_public; Owner: admin
+--
+
+CREATE TABLE new_public.customer (
+    customer_id bigint NOT NULL,
+    customer_full_name character varying(200),
+    telephone_number bigint,
+    passport_id integer
+);
+
+
+ALTER TABLE new_public.customer OWNER TO admin;
+
+--
+-- Name: customer_contracts; Type: TABLE; Schema: new_public; Owner: admin
+--
+
+CREATE TABLE new_public.customer_contracts (
+    contract_id bigint NOT NULL,
+    customer_id bigint NOT NULL,
+    student_id bigint NOT NULL
+);
+
+
+ALTER TABLE new_public.customer_contracts OWNER TO admin;
+
+--
+-- Name: customer_customer_id_seq; Type: SEQUENCE; Schema: new_public; Owner: admin
+--
+
+CREATE SEQUENCE new_public.customer_customer_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE new_public.customer_customer_id_seq OWNER TO admin;
+
+--
+-- Name: customer_customer_id_seq; Type: SEQUENCE OWNED BY; Schema: new_public; Owner: admin
+--
+
+ALTER SEQUENCE new_public.customer_customer_id_seq OWNED BY new_public.customer.customer_id;
+
+
+--
+-- Name: passport; Type: TABLE; Schema: new_public; Owner: admin
+--
+
+CREATE TABLE new_public.passport (
+    passport_id bigint NOT NULL,
+    passport_number bigint,
+    issuance character varying(500),
+    date_of_issuance timestamp without time zone,
+    division_code character varying(7),
+    registration character varying(500)
+);
+
+
+ALTER TABLE new_public.passport OWNER TO admin;
+
+--
+-- Name: passport_passport_id_seq; Type: SEQUENCE; Schema: new_public; Owner: admin
+--
+
+CREATE SEQUENCE new_public.passport_passport_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE new_public.passport_passport_id_seq OWNER TO admin;
+
+--
+-- Name: passport_passport_id_seq; Type: SEQUENCE OWNED BY; Schema: new_public; Owner: admin
+--
+
+ALTER SEQUENCE new_public.passport_passport_id_seq OWNED BY new_public.passport.passport_id;
+
+
+--
+-- Name: student; Type: TABLE; Schema: new_public; Owner: admin
+--
+
+CREATE TABLE new_public.student (
+    student_id bigint NOT NULL,
+    student_full_name character varying(200),
+    student_telephone bigint
+);
+
+
+ALTER TABLE new_public.student OWNER TO admin;
+
+--
+-- Name: student_student_id_seq; Type: SEQUENCE; Schema: new_public; Owner: admin
+--
+
+CREATE SEQUENCE new_public.student_student_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE new_public.student_student_id_seq OWNER TO admin;
+
+--
+-- Name: student_student_id_seq; Type: SEQUENCE OWNED BY; Schema: new_public; Owner: admin
+--
+
+ALTER SEQUENCE new_public.student_student_id_seq OWNED BY new_public.student.student_id;
+
+
+--
+-- Name: user_type; Type: TABLE; Schema: new_public; Owner: admin
+--
+
+CREATE TABLE new_public.user_type (
+    user_type_id bigint NOT NULL,
+    user_type_name character varying(100)
+);
+
+
+ALTER TABLE new_public.user_type OWNER TO admin;
+
+--
+-- Name: user_type_user_type_id_seq; Type: SEQUENCE; Schema: new_public; Owner: admin
+--
+
+CREATE SEQUENCE new_public.user_type_user_type_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE new_public.user_type_user_type_id_seq OWNER TO admin;
+
+--
+-- Name: user_type_user_type_id_seq; Type: SEQUENCE OWNED BY; Schema: new_public; Owner: admin
+--
+
+ALTER SEQUENCE new_public.user_type_user_type_id_seq OWNED BY new_public.user_type.user_type_id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: new_public; Owner: admin
+--
+
+CREATE TABLE new_public.users (
+    user_id bigint NOT NULL,
+    full_name character varying(200),
+    user_login character varying,
+    user_password character varying
+);
+
+
+ALTER TABLE new_public.users OWNER TO admin;
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: new_public; Owner: admin
+--
+
+CREATE SEQUENCE new_public.users_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE new_public.users_user_id_seq OWNER TO admin;
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: new_public; Owner: admin
+--
+
+ALTER SEQUENCE new_public.users_user_id_seq OWNED BY new_public.users.user_id;
+
+
+--
+-- Name: users_user_type; Type: TABLE; Schema: new_public; Owner: admin
+--
+
+CREATE TABLE new_public.users_user_type (
+    user_id integer,
+    user_type_id integer
+);
+
+
+ALTER TABLE new_public.users_user_type OWNER TO admin;
+
+--
+-- Name: contracts; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.contracts (
+    contract_id bigint NOT NULL,
+    contract_date_begin timestamp without time zone,
+    contract_date_end timestamp without time zone,
+    education_date_start timestamp without time zone,
+    education_date_end timestamp without time zone,
+    contract_price integer,
+    creator_id integer,
+    customer_id bigint,
+    student_id bigint
+);
+
+
+ALTER TABLE public.contracts OWNER TO admin;
+
+--
+-- Name: contracts_contract_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+--
+
+CREATE SEQUENCE public.contracts_contract_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.contracts_contract_id_seq OWNER TO admin;
+
+--
+-- Name: contracts_contract_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+--
+
+ALTER SEQUENCE public.contracts_contract_id_seq OWNED BY public.contracts.contract_id;
+
+
+--
+-- Name: customer; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.customer (
+    customer_id bigint NOT NULL,
+    customer_full_name character varying(200),
+    telephone_number bigint,
+    passport_id integer
+);
+
+
+ALTER TABLE public.customer OWNER TO admin;
+
+--
+-- Name: customer_customer_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+--
+
+CREATE SEQUENCE public.customer_customer_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.customer_customer_id_seq OWNER TO admin;
+
+--
+-- Name: customer_customer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+--
+
+ALTER SEQUENCE public.customer_customer_id_seq OWNED BY public.customer.customer_id;
+
+
+--
+-- Name: passport; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.passport (
+    passport_id bigint NOT NULL,
+    passport_number bigint,
+    issuance character varying(500),
+    date_of_issuance timestamp without time zone,
+    division_code character varying(7),
+    registration character varying(500)
+);
+
+
+ALTER TABLE public.passport OWNER TO admin;
+
+--
+-- Name: passport_passport_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+--
+
+CREATE SEQUENCE public.passport_passport_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.passport_passport_id_seq OWNER TO admin;
+
+--
+-- Name: passport_passport_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+--
+
+ALTER SEQUENCE public.passport_passport_id_seq OWNED BY public.passport.passport_id;
+
+
+--
+-- Name: student; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.student (
+    student_id bigint NOT NULL,
+    student_full_name character varying(200),
+    student_telephone bigint
+);
+
+
+ALTER TABLE public.student OWNER TO admin;
+
+--
+-- Name: student_student_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+--
+
+CREATE SEQUENCE public.student_student_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.student_student_id_seq OWNER TO admin;
+
+--
+-- Name: student_student_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+--
+
+ALTER SEQUENCE public.student_student_id_seq OWNED BY public.student.student_id;
+
+
+--
+-- Name: user_type; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.user_type (
+    user_type_id bigint NOT NULL,
+    user_type_name character varying(100)
+);
+
+
+ALTER TABLE public.user_type OWNER TO admin;
+
+--
+-- Name: user_type_user_type_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+--
+
+CREATE SEQUENCE public.user_type_user_type_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.user_type_user_type_id_seq OWNER TO admin;
+
+--
+-- Name: user_type_user_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+--
+
+ALTER SEQUENCE public.user_type_user_type_id_seq OWNED BY public.user_type.user_type_id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.users (
+    user_id bigint NOT NULL,
+    full_name character varying(200),
+    user_login character varying,
+    user_password character varying
+);
+
+
+ALTER TABLE public.users OWNER TO admin;
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+--
+
+CREATE SEQUENCE public.users_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.users_user_id_seq OWNER TO admin;
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+--
+
+ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
+
+
+--
+-- Name: users_user_type; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.users_user_type (
+    user_id integer,
+    user_type_id integer
+);
+
+
+ALTER TABLE public.users_user_type OWNER TO admin;
+
+--
+-- Name: contracts contract_id; Type: DEFAULT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.contracts ALTER COLUMN contract_id SET DEFAULT nextval('new_public.contracts_contract_id_seq'::regclass);
+
+
+--
+-- Name: customer customer_id; Type: DEFAULT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.customer ALTER COLUMN customer_id SET DEFAULT nextval('new_public.customer_customer_id_seq'::regclass);
+
+
+--
+-- Name: passport passport_id; Type: DEFAULT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.passport ALTER COLUMN passport_id SET DEFAULT nextval('new_public.passport_passport_id_seq'::regclass);
+
+
+--
+-- Name: student student_id; Type: DEFAULT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.student ALTER COLUMN student_id SET DEFAULT nextval('new_public.student_student_id_seq'::regclass);
+
+
+--
+-- Name: user_type user_type_id; Type: DEFAULT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.user_type ALTER COLUMN user_type_id SET DEFAULT nextval('new_public.user_type_user_type_id_seq'::regclass);
+
+
+--
+-- Name: users user_id; Type: DEFAULT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.users ALTER COLUMN user_id SET DEFAULT nextval('new_public.users_user_id_seq'::regclass);
+
+
+--
+-- Name: contracts contract_id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.contracts ALTER COLUMN contract_id SET DEFAULT nextval('public.contracts_contract_id_seq'::regclass);
+
+
+--
+-- Name: customer customer_id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.customer ALTER COLUMN customer_id SET DEFAULT nextval('public.customer_customer_id_seq'::regclass);
+
+
+--
+-- Name: passport passport_id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.passport ALTER COLUMN passport_id SET DEFAULT nextval('public.passport_passport_id_seq'::regclass);
+
+
+--
+-- Name: student student_id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.student ALTER COLUMN student_id SET DEFAULT nextval('public.student_student_id_seq'::regclass);
+
+
+--
+-- Name: user_type user_type_id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.user_type ALTER COLUMN user_type_id SET DEFAULT nextval('public.user_type_user_type_id_seq'::regclass);
+
+
+--
+-- Name: users user_id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.users_user_id_seq'::regclass);
+
+
+--
+-- Data for Name: contracts; Type: TABLE DATA; Schema: new_public; Owner: admin
+--
+
+COPY new_public.contracts (contract_id, contract_date_begin, contract_date_end, education_date_start, education_date_end, contract_price, creator_id) FROM stdin;
+1	1987-11-19 04:56:28	1978-01-19 13:55:17	2003-01-04 03:28:57	2008-03-14 08:01:18	984310	4
+2	2005-06-15 12:58:30	1986-12-17 00:23:57	2021-01-19 14:41:43	1997-06-01 10:18:25	445807	2
+3	1997-12-18 19:26:01	1985-03-25 14:36:22	1976-03-22 00:27:39	2005-09-25 06:20:47	180901	3
+4	2022-01-30 23:06:59	2008-03-03 03:50:43	1991-04-10 02:21:19	1991-06-03 01:59:35	900261	1
+5	1994-12-18 03:53:03	1987-03-17 04:53:17	1985-03-14 05:06:00	2006-06-07 00:03:57	18397	4
+6	1982-02-12 15:03:46	1988-09-08 11:32:03	1980-04-22 07:06:02	1989-03-13 21:56:37	356648	2
+7	1982-12-23 09:44:09	1997-09-18 08:35:18	1978-10-31 09:07:07	2007-11-26 14:27:06	395212	4
+8	1981-02-02 08:49:50	1983-03-12 00:38:14	2007-09-12 08:35:04	1973-08-22 01:01:44	145854	2
+9	1990-12-11 15:33:42	1983-08-09 03:53:31	1999-04-11 03:56:52	1986-11-24 01:01:47	270979	3
+10	1983-02-11 09:37:54	2012-07-29 06:23:54	1997-10-29 12:07:41	2012-04-22 18:54:24	828834	2
+11	1973-02-28 20:55:56	1984-01-28 06:55:22	2020-09-24 19:15:05	2005-03-04 01:40:47	343193	4
+12	1992-09-11 19:52:35	2023-07-22 13:31:06	1986-09-25 20:44:49	1996-11-06 04:31:48	910063	3
+13	1997-06-12 13:57:35	2003-12-29 16:44:34	2010-05-22 13:21:29	1973-08-20 16:40:59	193699	1
+14	2023-08-07 09:47:34	2001-01-08 02:25:04	1991-10-27 23:03:52	2010-11-18 13:12:24	335519	4
+15	2022-10-01 08:18:22	2015-04-04 17:57:21	1992-07-20 11:14:05	1986-03-09 17:28:13	133093	1
+16	1993-11-20 09:59:13	2017-07-07 13:27:20	1997-06-28 12:45:54	2006-06-27 03:10:16	152516	1
+17	2021-08-19 17:31:01	1984-02-16 03:44:31	2018-12-06 21:26:52	2017-07-18 21:48:23	101582	4
+18	2003-06-15 18:58:11	1989-12-12 09:39:22	2023-01-19 14:50:41	1994-12-25 11:11:05	671860	1
+19	1975-06-07 00:14:36	2016-05-03 11:50:11	1994-04-28 00:28:42	2003-08-15 14:58:22	302292	2
+20	2014-12-03 13:48:00	2001-12-24 18:20:48	1993-09-19 06:40:31	2013-03-06 05:59:06	442804	1
+21	2003-09-04 20:23:48	1980-07-27 22:20:50	1989-12-26 07:28:13	2020-02-29 11:33:45	552776	1
+22	1987-08-20 13:12:11	2015-10-31 06:15:50	2010-07-14 10:23:01	1999-03-20 17:16:39	539990	3
+23	2011-12-10 04:41:13	1979-01-31 09:01:52	1972-06-01 13:40:46	1987-12-02 20:00:35	25315	3
+24	1996-10-12 06:14:08	2016-01-17 22:47:09	1993-01-01 02:38:24	1972-11-02 13:04:50	654823	2
+25	1984-03-25 04:49:48	1997-04-30 06:32:16	1974-08-24 00:21:43	2007-01-07 03:21:24	400836	1
+26	1976-09-27 17:12:23	2001-07-01 14:00:07	2009-05-09 13:05:09	2019-10-03 09:03:45	976383	3
+27	2020-06-21 11:27:40	1981-01-19 17:34:12	2023-03-30 06:23:27	1996-02-14 02:22:05	717438	2
+28	1981-11-30 03:30:12	1996-04-20 10:17:41	1999-06-17 07:31:43	1975-05-02 02:42:06	10280	2
+29	2012-10-05 16:31:14	2019-09-18 09:30:45	2004-12-15 20:05:07	1976-06-27 17:47:00	652076	2
+30	1972-01-18 23:40:05	2021-10-22 03:49:30	1985-12-17 23:04:08	2022-12-26 20:18:03	942469	4
+31	1988-03-12 18:34:31	2013-01-27 03:10:58	2013-09-12 02:18:55	1988-07-06 18:27:50	616424	3
+32	1993-06-07 18:58:51	1975-04-18 15:20:57	2020-12-14 11:42:31	1982-01-04 16:22:36	108416	1
+33	1973-01-30 19:47:24	1999-12-02 22:44:16	1986-03-29 09:47:51	1979-03-05 13:26:31	414219	1
+34	2012-03-05 03:07:49	2016-03-13 06:07:53	1995-01-21 19:32:09	2000-11-19 08:46:48	356383	3
+35	2022-03-08 05:23:10	1990-05-25 08:14:11	1998-10-10 11:47:48	2016-06-24 19:26:13	695690	4
+36	2022-03-14 07:23:07	2021-09-15 22:19:37	2001-05-10 09:01:32	1999-07-29 10:05:00	209944	2
+37	1999-04-22 11:41:59	1979-08-24 23:10:44	1992-02-29 14:54:09	1972-04-01 19:21:22	436987	3
+38	2020-10-22 22:02:11	1972-08-26 00:06:59	1980-01-24 15:31:04	2004-11-25 13:25:21	643267	2
+39	2002-09-08 02:53:34	1971-09-05 02:38:50	2013-11-20 21:17:02	1972-08-20 22:48:42	93418	1
+40	2000-09-06 13:44:55	1977-08-22 15:32:28	2017-10-27 17:59:46	2004-01-10 01:19:27	573275	4
+41	2017-12-23 18:19:18	1987-04-25 15:38:04	2003-09-25 11:51:50	2008-09-06 11:41:32	711551	2
+42	1991-07-05 05:01:38	1994-07-06 09:31:54	2021-03-28 20:46:33	1988-12-09 07:06:40	358291	3
+43	1989-03-31 13:32:52	1974-09-02 02:06:49	1996-08-10 21:44:19	1992-06-29 03:08:46	49131	1
+44	1978-06-29 02:53:53	1971-12-09 21:43:04	2015-08-12 10:46:47	1970-11-19 21:49:15	638419	4
+45	1984-02-15 19:02:18	2012-12-09 07:19:48	1984-04-20 20:57:11	2011-03-06 13:16:13	957736	3
+46	2014-07-03 07:08:38	1974-12-16 20:37:23	1992-11-14 05:56:19	1977-08-08 03:18:07	733326	4
+47	2005-09-01 06:48:41	2009-03-27 10:27:38	1975-04-12 16:22:51	1998-11-18 13:10:15	793849	1
+48	1991-03-11 08:31:07	1971-07-08 22:34:14	2014-06-29 08:12:18	1988-05-13 17:05:32	599245	1
+49	1970-03-30 09:51:17	2012-03-07 18:40:13	2018-09-30 03:31:57	1975-07-25 21:30:14	430360	2
+50	1990-10-31 16:08:00	2008-08-26 20:18:25	2011-10-12 05:12:49	1970-03-29 08:04:42	293858	1
+\.
+
+
+--
+-- Data for Name: customer; Type: TABLE DATA; Schema: new_public; Owner: admin
+--
+
+COPY new_public.customer (customer_id, customer_full_name, telephone_number, passport_id) FROM stdin;
+1	Зиновьев Конон Васильевич	79812583448	1
+2	Нинель Дмитриевна Денисова	79631421296	2
+3	Хохлова Майя Алексеевна	79537246867	3
+4	Галактион Валерианович Григорьев	79127832502	4
+5	Копылова Надежда Вячеславовна	79103954163	5
+6	Фокин Исай Ефремович	79589765635	6
+7	Вышеслав Германович Моисеев	79160432225	7
+8	Гордеева Алевтина Алексеевна	79789978439	8
+9	Фаина Ивановна Фомина	79662973107	9
+10	Сидоров Герман Богданович	79836338042	10
+11	Творимир Данилович Капустин	79374866255	11
+12	Агафья Николаевна Селезнева	79177918638	12
+13	Ильина Ия Яковлевна	79772482083	13
+14	Анжелика Рудольфовна Капустина	79547666312	14
+15	Логинов Аркадий Бориславович	79982489666	15
+16	Евстигней Васильевич Брагин	79536387193	16
+17	Ипполит Даниилович Лебедев	79710895712	17
+18	Валентина Максимовна Кириллова	79519671013	18
+19	Аскольд Гавриилович Носов	79411332992	19
+20	Соколов Сильвестр Владиславович	79834580207	20
+21	Терентий Валерьянович Ефимов	79880130254	21
+22	Агата Олеговна Лебедева	79484231438	22
+23	Константинов Осип Эдуардович	79318448789	23
+24	Виктория Валентиновна Савина	79244194339	24
+25	Антонин Абрамович Павлов	79781747677	25
+26	Ия Мироновна Рябова	79781269683	26
+27	Таисия Вениаминовна Соколова	79813353975	27
+28	Лукина Елена Рубеновна	79115243043	28
+29	Николай Феликсович Шарапов	79636975055	29
+30	Ларионов Ананий Филиппович	79154193772	30
+31	Агата Васильевна Одинцова	79473429797	31
+32	Элеонора Эльдаровна Панфилова	79589245227	32
+33	Алина Захаровна Вишнякова	79154319627	33
+34	Юдин Всемил Трифонович	79604151154	34
+35	Всеслав Юльевич Сергеев	79313697890	35
+36	Елена Геннадьевна Логинова	79769434062	36
+37	Октябрина Харитоновна Крылова	79597131761	37
+38	Титов Рюрик Елизарович	79949654892	38
+39	Спиридон Федосьевич Игнатьев	79939106169	39
+40	Ангелина Святославовна Миронова	79785742723	40
+41	Фортунат Германович Мухин	79918060586	41
+42	Харлампий Харлампович Цветков	79142275670	42
+43	Артемьев Аверкий Филиппович	79379890288	43
+44	Бобылев Эдуард Трофимович	79668547286	44
+45	Якуб Данилович Петухов	79470224376	45
+46	Рожков Сила Артемьевич	79731521386	46
+47	Ермаков Измаил Иларионович	79267588885	47
+48	Пахом Брониславович Большаков	79689805933	48
+49	Ираида Владимировна Лобанова	79520815823	49
+50	Мариан Харлампович Цветков	79334151587	50
+\.
+
+
+--
+-- Data for Name: customer_contracts; Type: TABLE DATA; Schema: new_public; Owner: admin
+--
+
+COPY new_public.customer_contracts (contract_id, customer_id, student_id) FROM stdin;
+1	1	11
+2	2	12
+3	3	50
+4	3	50
+5	2	45
+6	3	15
+7	5	20
+8	6	41
+9	13	41
+10	12	43
+11	11	42
+12	2	41
+13	50	40
+14	48	39
+15	46	39
+16	43	38
+17	33	37
+18	23	35
+19	42	32
+20	25	30
+21	27	28
+22	29	29
+23	31	27
+24	13	26
+25	22	25
+26	24	22
+27	26	21
+28	28	20
+29	30	20
+30	49	20
+31	47	20
+32	42	19
+33	50	18
+34	14	17
+35	15	16
+36	16	15
+37	17	14
+38	41	13
+39	14	12
+40	46	11
+41	20	10
+42	40	9
+43	30	8
+44	10	7
+45	1	6
+46	2	5
+47	3	4
+48	4	3
+49	5	2
+50	6	1
+\.
+
+
+--
+-- Data for Name: passport; Type: TABLE DATA; Schema: new_public; Owner: admin
+--
+
+COPY new_public.passport (passport_id, passport_number, issuance, date_of_issuance, division_code, registration) FROM stdin;
+1	6499502559	Чукотский АО	2010-02-08 20:25:22	255-155	п. Елатьма, алл. Репина, д. 6 стр. 67, 204091
+2	5385608533	Вологодская обл.	1973-08-27 08:30:42	583-876	клх Усть-Ордынский, алл. 70 лет Октября, д. 1/7 к. 359, 048334
+3	4435443619	Волгоградская обл.	2019-01-15 03:19:08	180-988	клх Красноуральск, алл. Омская, д. 9 стр. 34, 448768
+4	6454135642	респ. Татарстан	1974-10-04 10:48:12	362-873	д. Ямбург, пр. О.Кошевого, д. 2/3 к. 5, 778083
+5	2695424149	Пермский край	1990-12-22 07:35:40	977-423	клх Брянск, ул. Космодемьянской, д. 50, 650191
+6	2314576956	Псковская обл.	1973-01-03 18:55:25	653-754	д. Усть-Кут, бул. Матросова, д. 22 стр. 2/4, 168403
+7	7284281166	Ямало-Ненецкий АО	1974-05-29 07:11:06	959-873	клх Железногорск(Курск.), ул. Гражданская, д. 150 к. 64, 495987
+8	7962442528	Московская обл.	1976-04-11 15:22:34	740-348	ст. Калевала, ул. Троицкая, д. 113 стр. 5, 143701
+9	1067920473	Ханты-Мансийский АО	1986-10-27 23:14:19	126-700	ст. Пенза, бул. Февральский, д. 519 к. 6/4, 813412
+10	7473257885	Хабаровский край	1987-10-03 14:38:46	854-189	клх Прохладный, бул. Краснознаменный, д. 54 стр. 1, 965283
+11	5595987384	респ. Ингушетия	2012-12-01 14:04:16	824-509	клх Снежногорск (Мурм.), наб. Шевченко, д. 201, 953143
+12	2394471073	Ненецкий АО	2008-10-15 09:22:08	858-184	д. Плес, ул. Володарского, д. 22 стр. 5/8, 276482
+13	4253560014	Красноярский край	1970-09-16 14:08:19	999-597	к. Дудинка, ш. Литейное, д. 36 стр. 4/8, 669017
+14	1533758056	Ставропольский край	2020-12-20 04:18:04	259-983	с. Шенкурск, ш. Виноградное, д. 923, 905785
+15	5600753612	респ. Башкортостан	1973-05-21 09:53:26	151-153	г. Юрьев-Польский, ш. Родниковое, д. 446 стр. 841, 303337
+16	7111903228	Алтайский край	2021-10-25 06:45:39	716-453	д. Шатки, ул. Вавилова, д. 1/9 стр. 1/3, 180506
+17	8077961170	Ханты-Мансийский АО	1994-11-28 17:44:25	652-760	д. Пушкинские Горы, алл. Базарная, д. 29, 826654
+18	7169686937	Тульская обл.	1988-08-26 13:09:50	474-249	д. Камышлов, ул. Осипенко, д. 7/5 стр. 5, 720602
+19	5983838396	Ямало-Ненецкий АО	2023-06-02 04:58:05	195-887	клх Данков, ш. Чехова, д. 33, 282871
+20	3390600812	Забайкальский край	2005-02-27 04:58:59	670-513	клх Самара, ш. Придорожное, д. 73 стр. 1/8, 892784
+21	7271284846	Курская обл.	2021-10-08 03:44:56	962-166	ст. Чусовой, ул. Набережная, д. 1, 475901
+22	1083468947	Ханты-Мансийский АО	1992-12-23 18:16:18	214-130	клх Омск, ш. Проточное, д. 8/9, 947625
+23	3267904260	Новосибирская обл.	1979-10-06 20:45:06	462-231	г. Александровск-Сахалинский, бул. Краснознаменный, д. 298 стр. 8/5, 748492
+24	4149880756	респ. Мордовия	1985-02-09 09:55:41	763-139	ст. Оленек, наб. Казанская, д. 264 стр. 78, 571848
+25	4994205001	респ. Чувашия	2005-09-09 01:45:53	408-306	ст. Льгов, пер. Камский, д. 69 стр. 8, 893618
+26	1197811460	Еврейская АО	2004-11-22 10:49:02	910-946	ст. Ногинск (Моск.), ш. Сенное, д. 9, 894729
+27	2339279753	Ямало-Ненецкий АО	2009-11-10 08:10:36	403-516	д. Серафимович, пр. Урицкого, д. 287 к. 3, 792297
+28	1123803115	Ненецкий АО	1994-08-17 04:55:56	166-512	п. Чермоз, алл. Спортивная, д. 1/6, 336087
+29	9044121967	Чукотский АО	2008-02-06 03:05:10	460-573	ст. Каргасок, ш. Советское, д. 71, 970437
+30	3373930776	Ханты-Мансийский АО	1970-02-02 22:03:27	666-525	д. Тверь, ул. Победы, д. 28 к. 12, 982645
+31	1213738498	Кировская обл.	2023-04-07 21:08:13	454-869	клх Липецк, алл. Куйбышева, д. 74 к. 725, 066610
+32	3346366535	Волгоградская обл.	1993-09-11 12:10:16	473-887	клх Урус-Мартан, наб. Большевистская, д. 8/4 к. 6, 404222
+33	6180091346	Тверская обл.	1974-06-13 00:47:30	561-241	ст. Нижний Новгород, ул. Дальневосточная, д. 24, 222072
+34	2551688507	Ямало-Ненецкий АО	2017-06-04 08:26:02	135-697	ст. Верещагино (Перм.), пр. Чкалова, д. 9 к. 6, 064402
+35	3139554430	респ. Хакасия	1997-04-11 08:14:31	225-847	д. Валдай, наб. Вокзальная, д. 34, 287450
+36	4504876351	респ. Удмуртия	2003-03-19 13:46:18	191-133	п. Назрань, ул. Профсоюзная, д. 45 к. 313, 234077
+37	6884826732	Краснодарский край	1972-10-22 19:56:36	396-576	д. Саров (Морд.), наб. Гастелло, д. 29 стр. 719, 401728
+38	3481701526	Курганская обл.	1980-08-15 05:32:41	261-341	д. Тюмень, алл. Попова, д. 7/6, 576619
+39	1386237381	Хабаровский край	2015-09-28 20:14:52	195-952	г. Советский, бул. Строительный, д. 2, 039254
+40	3001596314	Амурская обл.	1990-07-10 11:43:24	936-151	д. Шерегеш, пер. Павлика Морозова, д. 610 стр. 7, 789530
+41	8244604461	Омская обл.	1987-06-17 22:34:46	880-559	г. Певек, наб. Балтийская, д. 9/4 стр. 8/7, 225717
+42	6007786417	Смоленская обл.	1996-08-19 20:46:57	498-105	к. Адыгейск, ш. Свободы, д. 6/8, 487118
+43	9564034199	Забайкальский край	2018-03-23 09:21:26	928-247	г. Красная Поляна, ул. Добролюбова, д. 2/4 стр. 2, 688871
+44	2297048077	Алтайский край	2004-01-16 18:09:12	278-305	ст. Куртамыш, ул. Приморская, д. 292, 603466
+45	3634467099	респ. Карачаево-Черкесия	1971-12-01 04:34:20	713-728	ст. Ряжск, наб. Рабочая, д. 484, 202160
+46	2066123012	Ханты-Мансийский АО	2016-02-14 23:38:29	570-115	клх Железногорск(Курск.), наб. Волжская, д. 24 к. 335, 446423
+47	8245027821	респ. Карачаево-Черкесия	2010-10-16 04:14:34	311-214	клх Андреаполь, пр. Фурманова, д. 70 к. 981, 365021
+48	3133703536	Алтайский край	1982-02-07 00:14:41	694-529	с. Шереметьево, алл. Боровая, д. 4, 492113
+49	8743776014	Ямало-Ненецкий АО	2007-06-30 11:45:18	553-653	ст. Агата, пер. Амурский, д. 95 стр. 715, 484952
+50	6921419004	Камчатский край	1984-03-19 03:37:07	652-140	г. Арзамас, наб. Смоленская, д. 466, 181008
+51	4061069526	Ненецкий АО	1991-06-28 16:52:34	703-887	д. Макушино, бул. 1 Мая, д. 5/9, 833013
+52	7711746263	Свердловская обл.	1997-09-21 19:51:00	703-472	к. Кулунда, наб. Нефтяников, д. 788 стр. 883, 717733
+53	4355544270	Еврейская АО	2019-06-30 17:35:01	650-533	г. Оленегорск (Якут.), ул. Азина, д. 24, 443054
+54	9023880920	респ. Тыва	1986-08-06 04:15:46	452-604	к. Бийск, пр. Горный, д. 779, 557963
+55	8159122861	Тамбовская обл.	1979-05-10 14:13:05	309-828	с. Кажим, наб. Ленская, д. 2 стр. 12, 963139
+56	2417956553	Забайкальский край	2022-03-19 23:56:03	729-403	д. Жиганск, наб. Широкая, д. 96 стр. 258, 459045
+57	1869825684	Еврейская АО	1997-11-25 09:33:17	535-949	п. Асино, пр. Раздольный, д. 4/3 стр. 9, 187288
+58	8075218404	Ханты-Мансийский АО	1973-07-24 14:30:20	636-183	д. Адлер, пр. Отрадный, д. 5/8 к. 8, 061720
+59	1683115345	Тамбовская обл.	1977-06-22 18:03:01	924-201	д. Урус-Мартан, наб. Высотная, д. 55 стр. 5/5, 234711
+60	8513599191	Ленинградская обл.	1990-04-29 05:03:34	527-478	г. Орел, бул. Хуторской, д. 6/7 к. 442, 366998
+61	7797027286	Пермский край	1985-08-19 22:34:44	669-415	г. Бронницы, наб. Тамбовская, д. 577, 544049
+62	3216063077	Чукотский АО	2006-03-06 06:35:19	143-371	ст. Геленджик, наб. Механическая, д. 781 к. 28, 848569
+63	6189542685	Ненецкий АО	1975-12-07 00:49:29	950-786	ст. Нарткала, ш. Докучаева, д. 2/2, 154853
+64	4209929645	Ставропольский край	2023-03-10 11:02:45	774-166	д. Брянск, алл. Отрадная, д. 7/4 к. 40, 421064
+65	2603443830	Алтайский край	1987-12-29 17:05:27	924-260	ст. Листвянка (Иркут.), алл. Иркутская, д. 8 стр. 3, 878253
+66	1350234403	Камчатский край	1974-10-31 20:59:21	371-131	п. Урюпинск, наб. Магистральная, д. 93 стр. 385, 680964
+67	5949611607	Ростовская обл.	1981-11-13 05:04:54	864-858	г. Боровск, пер. Юбилейный, д. 12 к. 1/1, 240599
+68	6667710165	Хабаровский край	1993-12-02 01:50:30	411-255	с. Находка, алл. Кольцевая, д. 6, 591215
+69	8039751100	респ. Алтай	2003-04-28 10:22:57	112-115	к. Вологда, ш. Пугачева, д. 80 стр. 331, 420785
+70	3483073893	респ. Алтай	1995-04-22 12:24:04	942-906	п. Чикола, пер. Металлургов, д. 1 стр. 4/3, 544560
+71	9547152933	Хабаровский край	1986-08-10 14:43:42	400-129	к. Вытегра, пр. Щетинкина, д. 994 к. 1, 012558
+72	8253308417	Красноярский край	1987-09-20 06:38:29	600-410	с. Поярково, пр. Мира, д. 8/7, 704639
+73	5825871846	респ. Саха (Якутия)	2002-11-26 12:38:36	133-767	с. Сладково, пер. Парижской Коммуны, д. 6/5 к. 13, 658404
+74	5234080288	Ямало-Ненецкий АО	2008-08-24 13:36:40	738-808	п. Шуя, пр. Тополиный, д. 48 стр. 3, 554447
+75	6110260417	Камчатский край	1978-03-30 04:29:38	306-154	п. Шатки, пр. Степной, д. 135 к. 6, 870935
+76	5667435591	Хабаровский край	1975-08-07 07:24:32	822-900	ст. Белореченск, наб. Инженерная, д. 85 стр. 90, 301959
+77	4302554331	респ. Чувашия	2003-07-07 03:25:22	138-864	клх Солнечногорск, ул. Таежная, д. 491, 967290
+78	6563751683	респ. Башкортостан	1988-04-17 18:06:22	337-126	с. Магас, пер. Минский, д. 224, 803697
+79	7815897433	респ. Калмыкия	2011-08-12 09:48:09	389-508	клх Каргасок, ул. Портовая, д. 7 стр. 7, 910893
+80	1812403649	респ. Карелия	2010-07-12 15:06:49	860-833	г. Елец, ул. Кузнечная, д. 516 к. 8/8, 727309
+81	4216686340	Краснодарский край	2014-08-15 06:16:45	330-229	г. Верхний Баскунчак, наб. Придорожная, д. 838 стр. 87, 874791
+82	1045447924	Орловская обл.	2010-04-09 05:41:29	849-185	д. Приозерск, алл. Энергетиков, д. 1/7, 823917
+83	4303601293	Ханты-Мансийский АО	1981-04-17 14:14:47	742-101	с. Петрозаводск, бул. Добролюбова, д. 28 к. 679, 294953
+84	1585505552	Ненецкий АО	1973-08-06 18:09:31	973-121	клх Шаховская, наб. Ясная, д. 8 к. 4/8, 080296
+85	4650466594	респ. Северная Осетия - Алания	1994-09-28 08:35:51	903-808	клх Волгоград, ул. Менделеева, д. 6 стр. 176, 928138
+86	2597057133	Ненецкий АО	2006-06-08 12:47:25	997-641	с. Калининград, алл. Раздольная, д. 73 стр. 1/2, 458819
+87	1008340641	Смоленская обл.	2009-12-08 12:48:54	302-262	ст. Меренга, алл. Энергетиков, д. 4/1, 978435
+88	8256061110	Чукотский АО	1992-10-01 06:37:53	979-857	клх Всеволожск, алл. Чайкиной, д. 165, 500362
+89	8015386562	Волгоградская обл.	1980-05-15 01:24:02	675-188	п. Лазаревское, ш. Фрунзе, д. 3/9 стр. 8/7, 122729
+90	3029627830	Магаданская обл.	1990-08-20 02:01:10	220-684	д. Верхний Уфалей, ул. Осипенко, д. 6/3 к. 53, 900614
+91	7540859317	респ. Чечня	1983-06-09 22:58:23	956-839	к. Кижи, наб. Сурикова, д. 476 стр. 9/7, 065240
+92	6161665142	Еврейская АО	1997-07-18 13:25:32	172-163	к. Елатьма, алл. Ярославская, д. 15, 832640
+93	3618783144	Астраханская обл.	1997-10-02 09:41:37	382-533	г. Орск, алл. Высоцкого, д. 185 стр. 9/8, 972571
+94	4546121147	респ. Татарстан	2000-12-18 01:57:28	599-833	с. Джейрах, пер. Лазо, д. 22 стр. 6, 283738
+95	6800591479	респ. Хакасия	1987-09-12 03:09:15	457-918	к. Палана, пер. Новостройка, д. 378 к. 4/7, 080337
+96	2825439974	респ. Калмыкия	1970-04-30 04:23:51	323-354	д. Усть-Кулом, ул. Казачья, д. 9/4 к. 3/5, 267258
+97	9694130711	Камчатский край	1991-08-04 16:10:39	682-781	с. Тимашевск, пр. Грибоедова, д. 373 к. 5/1, 853411
+98	2819872772	Ханты-Мансийский АО	1978-12-30 09:25:21	688-664	д. Александровск-Сахалинский, алл. Матросова, д. 7 стр. 87, 881760
+99	8804553341	Ненецкий АО	1992-01-01 01:16:35	261-478	с. Нерчинск, пер. Вишневый, д. 8/7 к. 35, 470405
+100	8336977832	Хабаровский край	1988-12-17 09:15:22	606-125	с. Объячево, алл. Демьяна Бедного, д. 834 к. 6, 534109
+\.
+
+
+--
+-- Data for Name: student; Type: TABLE DATA; Schema: new_public; Owner: admin
+--
+
+COPY new_public.student (student_id, student_full_name, student_telephone) FROM stdin;
+1	Василиса Даниловна Носкова	79765480907
+2	Ростислав Данилович Жуков	79783052380
+3	Волков Тихон Игнатьевич	79567450324
+4	г-н Никифоров Святополк Владленович	79839738523
+5	Игнатов Валерьян Гертрудович	79454196347
+6	Кондратьева Варвара Николаевна	79766580637
+7	Кудрявцева Ольга Артемовна	79300018648
+8	Трофимова Ирина Святославовна	79802989681
+9	тов. Федосеева Кира Оскаровна	79489318176
+10	Маргарита Вадимовна Уварова	79409362274
+11	Трофимов Ладислав Феоктистович	79203419065
+12	Елизавета Вадимовна Ильина	79536037555
+13	Юдина Дарья Ждановна	79616799625
+14	Чеслав Ефимьевич Данилов	79787402448
+15	Петрова Марина Васильевна	79538142663
+16	Якушева Нина Федоровна	79598411618
+17	Аверьян Теймуразович Куликов	79123977065
+18	Аксенов Вышеслав Адрианович	79593086026
+19	Мартынова Нонна Романовна	79830817494
+20	Януарий Филиппович Зимин	79123270292
+21	Игнатьев Афиноген Измаилович	79672485901
+22	Фомичев Август Валерьянович	79426998639
+23	Август Глебович Шилов	79831223012
+24	Козлова Евфросиния Игоревна	79517805775
+25	Мстислав Виленович Карпов	79152414432
+26	Агафонов Милен Евсеевич	79684411383
+27	Терентий Владиславович Хохлов	79139895746
+28	Олимпиада Борисовна Некрасова	79814693938
+29	Ларионова Оксана Аркадьевна	79604022502
+30	Федотова Татьяна Робертовна	79572305392
+31	Бирюкова Мария Степановна	79513440138
+32	Никифор Александрович Гришин	79819163912
+33	Кудрявцев Василий Бориславович	79254871057
+34	Савина Нинель Константиновна	79947123459
+35	Исай Иосифович Королев	79691790801
+36	Елисей Фомич Кириллов	79941730786
+37	Родионова Ия Харитоновна	79366584653
+38	Лапин Борис Фомич	79765279566
+39	Маслова Екатерина Львовна	79786285302
+40	Елена Руслановна Уварова	79134754332
+41	Горбунова Людмила Макаровна	79804558415
+42	Гордеев Болеслав Владиславович	79444305109
+43	Бажен Артёмович Рожков	79476403526
+44	Вышеслав Феоктистович Одинцов	79883697044
+45	Валерьян Елисеевич Федоров	79227925753
+46	Калашникова Кира Михайловна	79445238455
+47	Ираклий Игнатович Егоров	79647911628
+48	Доронина Татьяна Алексеевна	79804239425
+49	Харитонова Татьяна Сергеевна	79516305722
+50	Титова Алевтина Кирилловна	79759027376
+\.
+
+
+--
+-- Data for Name: user_type; Type: TABLE DATA; Schema: new_public; Owner: admin
+--
+
+COPY new_public.user_type (user_type_id, user_type_name) FROM stdin;
+1	Администратор системы
+2	Преподаватель
+3	Пользователь
+4	Администратор (заключатель договоров)
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: new_public; Owner: admin
+--
+
+COPY new_public.users (user_id, full_name, user_login, user_password) FROM stdin;
+1	Иванов Иван Иванович	ivanov_ii	ivanov_ii
+2	Петров Петр Петрович	petrov_pp	petrov_pp
+3	Сидоров Александр Сергеевич	sidorov_as	sidorov_as
+4	Жлуткин Роман Валерьевич	zlutkin_rv	zlutkin_rv
+\.
+
+
+--
+-- Data for Name: users_user_type; Type: TABLE DATA; Schema: new_public; Owner: admin
+--
+
+COPY new_public.users_user_type (user_id, user_type_id) FROM stdin;
+1	2
+2	3
+3	4
+4	1
+\.
+
+
+--
+-- Data for Name: contracts; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.contracts (contract_id, contract_date_begin, contract_date_end, education_date_start, education_date_end, contract_price, creator_id, customer_id, student_id) FROM stdin;
+1	1987-11-19 04:56:28	1978-01-19 13:55:17	2003-01-04 03:28:57	2008-03-14 08:01:18	984310	4	1	11
+2	2005-06-15 12:58:30	1986-12-17 00:23:57	2021-01-19 14:41:43	1997-06-01 10:18:25	445807	2	2	12
+3	1997-12-18 19:26:01	1985-03-25 14:36:22	1976-03-22 00:27:39	2005-09-25 06:20:47	180901	3	3	50
+4	2022-01-30 23:06:59	2008-03-03 03:50:43	1991-04-10 02:21:19	1991-06-03 01:59:35	900261	1	3	50
+5	1994-12-18 03:53:03	1987-03-17 04:53:17	1985-03-14 05:06:00	2006-06-07 00:03:57	18397	4	2	45
+6	1982-02-12 15:03:46	1988-09-08 11:32:03	1980-04-22 07:06:02	1989-03-13 21:56:37	356648	2	3	15
+7	1982-12-23 09:44:09	1997-09-18 08:35:18	1978-10-31 09:07:07	2007-11-26 14:27:06	395212	4	5	20
+8	1981-02-02 08:49:50	1983-03-12 00:38:14	2007-09-12 08:35:04	1973-08-22 01:01:44	145854	2	6	41
+9	1990-12-11 15:33:42	1983-08-09 03:53:31	1999-04-11 03:56:52	1986-11-24 01:01:47	270979	3	13	41
+10	1983-02-11 09:37:54	2012-07-29 06:23:54	1997-10-29 12:07:41	2012-04-22 18:54:24	828834	2	12	43
+11	1973-02-28 20:55:56	1984-01-28 06:55:22	2020-09-24 19:15:05	2005-03-04 01:40:47	343193	4	11	42
+12	1992-09-11 19:52:35	2023-07-22 13:31:06	1986-09-25 20:44:49	1996-11-06 04:31:48	910063	3	2	41
+13	1997-06-12 13:57:35	2003-12-29 16:44:34	2010-05-22 13:21:29	1973-08-20 16:40:59	193699	1	50	40
+14	2023-08-07 09:47:34	2001-01-08 02:25:04	1991-10-27 23:03:52	2010-11-18 13:12:24	335519	4	48	39
+15	2022-10-01 08:18:22	2015-04-04 17:57:21	1992-07-20 11:14:05	1986-03-09 17:28:13	133093	1	46	39
+16	1993-11-20 09:59:13	2017-07-07 13:27:20	1997-06-28 12:45:54	2006-06-27 03:10:16	152516	1	43	38
+17	2021-08-19 17:31:01	1984-02-16 03:44:31	2018-12-06 21:26:52	2017-07-18 21:48:23	101582	4	33	37
+18	2003-06-15 18:58:11	1989-12-12 09:39:22	2023-01-19 14:50:41	1994-12-25 11:11:05	671860	1	23	35
+19	1975-06-07 00:14:36	2016-05-03 11:50:11	1994-04-28 00:28:42	2003-08-15 14:58:22	302292	2	42	32
+20	2014-12-03 13:48:00	2001-12-24 18:20:48	1993-09-19 06:40:31	2013-03-06 05:59:06	442804	1	25	30
+21	2003-09-04 20:23:48	1980-07-27 22:20:50	1989-12-26 07:28:13	2020-02-29 11:33:45	552776	1	27	28
+22	1987-08-20 13:12:11	2015-10-31 06:15:50	2010-07-14 10:23:01	1999-03-20 17:16:39	539990	3	29	29
+23	2011-12-10 04:41:13	1979-01-31 09:01:52	1972-06-01 13:40:46	1987-12-02 20:00:35	25315	3	31	27
+24	1996-10-12 06:14:08	2016-01-17 22:47:09	1993-01-01 02:38:24	1972-11-02 13:04:50	654823	2	13	26
+25	1984-03-25 04:49:48	1997-04-30 06:32:16	1974-08-24 00:21:43	2007-01-07 03:21:24	400836	1	22	25
+26	1976-09-27 17:12:23	2001-07-01 14:00:07	2009-05-09 13:05:09	2019-10-03 09:03:45	976383	3	24	22
+27	2020-06-21 11:27:40	1981-01-19 17:34:12	2023-03-30 06:23:27	1996-02-14 02:22:05	717438	2	26	21
+28	1981-11-30 03:30:12	1996-04-20 10:17:41	1999-06-17 07:31:43	1975-05-02 02:42:06	10280	2	28	20
+29	2012-10-05 16:31:14	2019-09-18 09:30:45	2004-12-15 20:05:07	1976-06-27 17:47:00	652076	2	30	20
+30	1972-01-18 23:40:05	2021-10-22 03:49:30	1985-12-17 23:04:08	2022-12-26 20:18:03	942469	4	49	20
+31	1988-03-12 18:34:31	2013-01-27 03:10:58	2013-09-12 02:18:55	1988-07-06 18:27:50	616424	3	47	20
+32	1993-06-07 18:58:51	1975-04-18 15:20:57	2020-12-14 11:42:31	1982-01-04 16:22:36	108416	1	42	19
+33	1973-01-30 19:47:24	1999-12-02 22:44:16	1986-03-29 09:47:51	1979-03-05 13:26:31	414219	1	50	18
+34	2012-03-05 03:07:49	2016-03-13 06:07:53	1995-01-21 19:32:09	2000-11-19 08:46:48	356383	3	14	17
+35	2022-03-08 05:23:10	1990-05-25 08:14:11	1998-10-10 11:47:48	2016-06-24 19:26:13	695690	4	15	16
+36	2022-03-14 07:23:07	2021-09-15 22:19:37	2001-05-10 09:01:32	1999-07-29 10:05:00	209944	2	16	15
+37	1999-04-22 11:41:59	1979-08-24 23:10:44	1992-02-29 14:54:09	1972-04-01 19:21:22	436987	3	17	14
+38	2020-10-22 22:02:11	1972-08-26 00:06:59	1980-01-24 15:31:04	2004-11-25 13:25:21	643267	2	41	13
+39	2002-09-08 02:53:34	1971-09-05 02:38:50	2013-11-20 21:17:02	1972-08-20 22:48:42	93418	1	14	12
+40	2000-09-06 13:44:55	1977-08-22 15:32:28	2017-10-27 17:59:46	2004-01-10 01:19:27	573275	4	46	11
+41	2017-12-23 18:19:18	1987-04-25 15:38:04	2003-09-25 11:51:50	2008-09-06 11:41:32	711551	2	20	10
+42	1991-07-05 05:01:38	1994-07-06 09:31:54	2021-03-28 20:46:33	1988-12-09 07:06:40	358291	3	40	9
+43	1989-03-31 13:32:52	1974-09-02 02:06:49	1996-08-10 21:44:19	1992-06-29 03:08:46	49131	1	30	8
+44	1978-06-29 02:53:53	1971-12-09 21:43:04	2015-08-12 10:46:47	1970-11-19 21:49:15	638419	4	10	7
+45	1984-02-15 19:02:18	2012-12-09 07:19:48	1984-04-20 20:57:11	2011-03-06 13:16:13	957736	3	1	6
+46	2014-07-03 07:08:38	1974-12-16 20:37:23	1992-11-14 05:56:19	1977-08-08 03:18:07	733326	4	2	5
+47	2005-09-01 06:48:41	2009-03-27 10:27:38	1975-04-12 16:22:51	1998-11-18 13:10:15	793849	1	3	4
+48	1991-03-11 08:31:07	1971-07-08 22:34:14	2014-06-29 08:12:18	1988-05-13 17:05:32	599245	1	4	3
+49	1970-03-30 09:51:17	2012-03-07 18:40:13	2018-09-30 03:31:57	1975-07-25 21:30:14	430360	2	5	2
+50	1990-10-31 16:08:00	2008-08-26 20:18:25	2011-10-12 05:12:49	1970-03-29 08:04:42	293858	1	6	1
+\.
+
+
+--
+-- Data for Name: customer; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.customer (customer_id, customer_full_name, telephone_number, passport_id) FROM stdin;
+1	Зиновьев Конон Васильевич	79812583448	1
+2	Нинель Дмитриевна Денисова	79631421296	2
+3	Хохлова Майя Алексеевна	79537246867	3
+4	Галактион Валерианович Григорьев	79127832502	4
+5	Копылова Надежда Вячеславовна	79103954163	5
+6	Фокин Исай Ефремович	79589765635	6
+7	Вышеслав Германович Моисеев	79160432225	7
+8	Гордеева Алевтина Алексеевна	79789978439	8
+9	Фаина Ивановна Фомина	79662973107	9
+10	Сидоров Герман Богданович	79836338042	10
+11	Творимир Данилович Капустин	79374866255	11
+12	Агафья Николаевна Селезнева	79177918638	12
+13	Ильина Ия Яковлевна	79772482083	13
+14	Анжелика Рудольфовна Капустина	79547666312	14
+15	Логинов Аркадий Бориславович	79982489666	15
+16	Евстигней Васильевич Брагин	79536387193	16
+17	Ипполит Даниилович Лебедев	79710895712	17
+18	Валентина Максимовна Кириллова	79519671013	18
+19	Аскольд Гавриилович Носов	79411332992	19
+20	Соколов Сильвестр Владиславович	79834580207	20
+21	Терентий Валерьянович Ефимов	79880130254	21
+22	Агата Олеговна Лебедева	79484231438	22
+23	Константинов Осип Эдуардович	79318448789	23
+24	Виктория Валентиновна Савина	79244194339	24
+25	Антонин Абрамович Павлов	79781747677	25
+26	Ия Мироновна Рябова	79781269683	26
+27	Таисия Вениаминовна Соколова	79813353975	27
+28	Лукина Елена Рубеновна	79115243043	28
+29	Николай Феликсович Шарапов	79636975055	29
+30	Ларионов Ананий Филиппович	79154193772	30
+31	Агата Васильевна Одинцова	79473429797	31
+32	Элеонора Эльдаровна Панфилова	79589245227	32
+33	Алина Захаровна Вишнякова	79154319627	33
+34	Юдин Всемил Трифонович	79604151154	34
+35	Всеслав Юльевич Сергеев	79313697890	35
+36	Елена Геннадьевна Логинова	79769434062	36
+37	Октябрина Харитоновна Крылова	79597131761	37
+38	Титов Рюрик Елизарович	79949654892	38
+39	Спиридон Федосьевич Игнатьев	79939106169	39
+40	Ангелина Святославовна Миронова	79785742723	40
+41	Фортунат Германович Мухин	79918060586	41
+42	Харлампий Харлампович Цветков	79142275670	42
+43	Артемьев Аверкий Филиппович	79379890288	43
+44	Бобылев Эдуард Трофимович	79668547286	44
+45	Якуб Данилович Петухов	79470224376	45
+46	Рожков Сила Артемьевич	79731521386	46
+47	Ермаков Измаил Иларионович	79267588885	47
+48	Пахом Брониславович Большаков	79689805933	48
+49	Ираида Владимировна Лобанова	79520815823	49
+50	Мариан Харлампович Цветков	79334151587	50
+\.
+
+
+--
+-- Data for Name: passport; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.passport (passport_id, passport_number, issuance, date_of_issuance, division_code, registration) FROM stdin;
+1	6499502559	Чукотский АО	2010-02-08 20:25:22	255-155	п. Елатьма, алл. Репина, д. 6 стр. 67, 204091
+2	5385608533	Вологодская обл.	1973-08-27 08:30:42	583-876	клх Усть-Ордынский, алл. 70 лет Октября, д. 1/7 к. 359, 048334
+3	4435443619	Волгоградская обл.	2019-01-15 03:19:08	180-988	клх Красноуральск, алл. Омская, д. 9 стр. 34, 448768
+4	6454135642	респ. Татарстан	1974-10-04 10:48:12	362-873	д. Ямбург, пр. О.Кошевого, д. 2/3 к. 5, 778083
+5	2695424149	Пермский край	1990-12-22 07:35:40	977-423	клх Брянск, ул. Космодемьянской, д. 50, 650191
+6	2314576956	Псковская обл.	1973-01-03 18:55:25	653-754	д. Усть-Кут, бул. Матросова, д. 22 стр. 2/4, 168403
+7	7284281166	Ямало-Ненецкий АО	1974-05-29 07:11:06	959-873	клх Железногорск(Курск.), ул. Гражданская, д. 150 к. 64, 495987
+8	7962442528	Московская обл.	1976-04-11 15:22:34	740-348	ст. Калевала, ул. Троицкая, д. 113 стр. 5, 143701
+9	1067920473	Ханты-Мансийский АО	1986-10-27 23:14:19	126-700	ст. Пенза, бул. Февральский, д. 519 к. 6/4, 813412
+10	7473257885	Хабаровский край	1987-10-03 14:38:46	854-189	клх Прохладный, бул. Краснознаменный, д. 54 стр. 1, 965283
+11	5595987384	респ. Ингушетия	2012-12-01 14:04:16	824-509	клх Снежногорск (Мурм.), наб. Шевченко, д. 201, 953143
+12	2394471073	Ненецкий АО	2008-10-15 09:22:08	858-184	д. Плес, ул. Володарского, д. 22 стр. 5/8, 276482
+13	4253560014	Красноярский край	1970-09-16 14:08:19	999-597	к. Дудинка, ш. Литейное, д. 36 стр. 4/8, 669017
+14	1533758056	Ставропольский край	2020-12-20 04:18:04	259-983	с. Шенкурск, ш. Виноградное, д. 923, 905785
+15	5600753612	респ. Башкортостан	1973-05-21 09:53:26	151-153	г. Юрьев-Польский, ш. Родниковое, д. 446 стр. 841, 303337
+16	7111903228	Алтайский край	2021-10-25 06:45:39	716-453	д. Шатки, ул. Вавилова, д. 1/9 стр. 1/3, 180506
+17	8077961170	Ханты-Мансийский АО	1994-11-28 17:44:25	652-760	д. Пушкинские Горы, алл. Базарная, д. 29, 826654
+18	7169686937	Тульская обл.	1988-08-26 13:09:50	474-249	д. Камышлов, ул. Осипенко, д. 7/5 стр. 5, 720602
+19	5983838396	Ямало-Ненецкий АО	2023-06-02 04:58:05	195-887	клх Данков, ш. Чехова, д. 33, 282871
+20	3390600812	Забайкальский край	2005-02-27 04:58:59	670-513	клх Самара, ш. Придорожное, д. 73 стр. 1/8, 892784
+21	7271284846	Курская обл.	2021-10-08 03:44:56	962-166	ст. Чусовой, ул. Набережная, д. 1, 475901
+22	1083468947	Ханты-Мансийский АО	1992-12-23 18:16:18	214-130	клх Омск, ш. Проточное, д. 8/9, 947625
+23	3267904260	Новосибирская обл.	1979-10-06 20:45:06	462-231	г. Александровск-Сахалинский, бул. Краснознаменный, д. 298 стр. 8/5, 748492
+24	4149880756	респ. Мордовия	1985-02-09 09:55:41	763-139	ст. Оленек, наб. Казанская, д. 264 стр. 78, 571848
+25	4994205001	респ. Чувашия	2005-09-09 01:45:53	408-306	ст. Льгов, пер. Камский, д. 69 стр. 8, 893618
+26	1197811460	Еврейская АО	2004-11-22 10:49:02	910-946	ст. Ногинск (Моск.), ш. Сенное, д. 9, 894729
+27	2339279753	Ямало-Ненецкий АО	2009-11-10 08:10:36	403-516	д. Серафимович, пр. Урицкого, д. 287 к. 3, 792297
+28	1123803115	Ненецкий АО	1994-08-17 04:55:56	166-512	п. Чермоз, алл. Спортивная, д. 1/6, 336087
+29	9044121967	Чукотский АО	2008-02-06 03:05:10	460-573	ст. Каргасок, ш. Советское, д. 71, 970437
+30	3373930776	Ханты-Мансийский АО	1970-02-02 22:03:27	666-525	д. Тверь, ул. Победы, д. 28 к. 12, 982645
+31	1213738498	Кировская обл.	2023-04-07 21:08:13	454-869	клх Липецк, алл. Куйбышева, д. 74 к. 725, 066610
+32	3346366535	Волгоградская обл.	1993-09-11 12:10:16	473-887	клх Урус-Мартан, наб. Большевистская, д. 8/4 к. 6, 404222
+33	6180091346	Тверская обл.	1974-06-13 00:47:30	561-241	ст. Нижний Новгород, ул. Дальневосточная, д. 24, 222072
+34	2551688507	Ямало-Ненецкий АО	2017-06-04 08:26:02	135-697	ст. Верещагино (Перм.), пр. Чкалова, д. 9 к. 6, 064402
+35	3139554430	респ. Хакасия	1997-04-11 08:14:31	225-847	д. Валдай, наб. Вокзальная, д. 34, 287450
+36	4504876351	респ. Удмуртия	2003-03-19 13:46:18	191-133	п. Назрань, ул. Профсоюзная, д. 45 к. 313, 234077
+37	6884826732	Краснодарский край	1972-10-22 19:56:36	396-576	д. Саров (Морд.), наб. Гастелло, д. 29 стр. 719, 401728
+38	3481701526	Курганская обл.	1980-08-15 05:32:41	261-341	д. Тюмень, алл. Попова, д. 7/6, 576619
+39	1386237381	Хабаровский край	2015-09-28 20:14:52	195-952	г. Советский, бул. Строительный, д. 2, 039254
+40	3001596314	Амурская обл.	1990-07-10 11:43:24	936-151	д. Шерегеш, пер. Павлика Морозова, д. 610 стр. 7, 789530
+41	8244604461	Омская обл.	1987-06-17 22:34:46	880-559	г. Певек, наб. Балтийская, д. 9/4 стр. 8/7, 225717
+42	6007786417	Смоленская обл.	1996-08-19 20:46:57	498-105	к. Адыгейск, ш. Свободы, д. 6/8, 487118
+43	9564034199	Забайкальский край	2018-03-23 09:21:26	928-247	г. Красная Поляна, ул. Добролюбова, д. 2/4 стр. 2, 688871
+44	2297048077	Алтайский край	2004-01-16 18:09:12	278-305	ст. Куртамыш, ул. Приморская, д. 292, 603466
+45	3634467099	респ. Карачаево-Черкесия	1971-12-01 04:34:20	713-728	ст. Ряжск, наб. Рабочая, д. 484, 202160
+46	2066123012	Ханты-Мансийский АО	2016-02-14 23:38:29	570-115	клх Железногорск(Курск.), наб. Волжская, д. 24 к. 335, 446423
+47	8245027821	респ. Карачаево-Черкесия	2010-10-16 04:14:34	311-214	клх Андреаполь, пр. Фурманова, д. 70 к. 981, 365021
+48	3133703536	Алтайский край	1982-02-07 00:14:41	694-529	с. Шереметьево, алл. Боровая, д. 4, 492113
+49	8743776014	Ямало-Ненецкий АО	2007-06-30 11:45:18	553-653	ст. Агата, пер. Амурский, д. 95 стр. 715, 484952
+50	6921419004	Камчатский край	1984-03-19 03:37:07	652-140	г. Арзамас, наб. Смоленская, д. 466, 181008
+51	4061069526	Ненецкий АО	1991-06-28 16:52:34	703-887	д. Макушино, бул. 1 Мая, д. 5/9, 833013
+52	7711746263	Свердловская обл.	1997-09-21 19:51:00	703-472	к. Кулунда, наб. Нефтяников, д. 788 стр. 883, 717733
+53	4355544270	Еврейская АО	2019-06-30 17:35:01	650-533	г. Оленегорск (Якут.), ул. Азина, д. 24, 443054
+54	9023880920	респ. Тыва	1986-08-06 04:15:46	452-604	к. Бийск, пр. Горный, д. 779, 557963
+55	8159122861	Тамбовская обл.	1979-05-10 14:13:05	309-828	с. Кажим, наб. Ленская, д. 2 стр. 12, 963139
+56	2417956553	Забайкальский край	2022-03-19 23:56:03	729-403	д. Жиганск, наб. Широкая, д. 96 стр. 258, 459045
+57	1869825684	Еврейская АО	1997-11-25 09:33:17	535-949	п. Асино, пр. Раздольный, д. 4/3 стр. 9, 187288
+58	8075218404	Ханты-Мансийский АО	1973-07-24 14:30:20	636-183	д. Адлер, пр. Отрадный, д. 5/8 к. 8, 061720
+59	1683115345	Тамбовская обл.	1977-06-22 18:03:01	924-201	д. Урус-Мартан, наб. Высотная, д. 55 стр. 5/5, 234711
+60	8513599191	Ленинградская обл.	1990-04-29 05:03:34	527-478	г. Орел, бул. Хуторской, д. 6/7 к. 442, 366998
+61	7797027286	Пермский край	1985-08-19 22:34:44	669-415	г. Бронницы, наб. Тамбовская, д. 577, 544049
+62	3216063077	Чукотский АО	2006-03-06 06:35:19	143-371	ст. Геленджик, наб. Механическая, д. 781 к. 28, 848569
+63	6189542685	Ненецкий АО	1975-12-07 00:49:29	950-786	ст. Нарткала, ш. Докучаева, д. 2/2, 154853
+64	4209929645	Ставропольский край	2023-03-10 11:02:45	774-166	д. Брянск, алл. Отрадная, д. 7/4 к. 40, 421064
+65	2603443830	Алтайский край	1987-12-29 17:05:27	924-260	ст. Листвянка (Иркут.), алл. Иркутская, д. 8 стр. 3, 878253
+66	1350234403	Камчатский край	1974-10-31 20:59:21	371-131	п. Урюпинск, наб. Магистральная, д. 93 стр. 385, 680964
+67	5949611607	Ростовская обл.	1981-11-13 05:04:54	864-858	г. Боровск, пер. Юбилейный, д. 12 к. 1/1, 240599
+68	6667710165	Хабаровский край	1993-12-02 01:50:30	411-255	с. Находка, алл. Кольцевая, д. 6, 591215
+69	8039751100	респ. Алтай	2003-04-28 10:22:57	112-115	к. Вологда, ш. Пугачева, д. 80 стр. 331, 420785
+70	3483073893	респ. Алтай	1995-04-22 12:24:04	942-906	п. Чикола, пер. Металлургов, д. 1 стр. 4/3, 544560
+71	9547152933	Хабаровский край	1986-08-10 14:43:42	400-129	к. Вытегра, пр. Щетинкина, д. 994 к. 1, 012558
+72	8253308417	Красноярский край	1987-09-20 06:38:29	600-410	с. Поярково, пр. Мира, д. 8/7, 704639
+73	5825871846	респ. Саха (Якутия)	2002-11-26 12:38:36	133-767	с. Сладково, пер. Парижской Коммуны, д. 6/5 к. 13, 658404
+74	5234080288	Ямало-Ненецкий АО	2008-08-24 13:36:40	738-808	п. Шуя, пр. Тополиный, д. 48 стр. 3, 554447
+75	6110260417	Камчатский край	1978-03-30 04:29:38	306-154	п. Шатки, пр. Степной, д. 135 к. 6, 870935
+76	5667435591	Хабаровский край	1975-08-07 07:24:32	822-900	ст. Белореченск, наб. Инженерная, д. 85 стр. 90, 301959
+77	4302554331	респ. Чувашия	2003-07-07 03:25:22	138-864	клх Солнечногорск, ул. Таежная, д. 491, 967290
+78	6563751683	респ. Башкортостан	1988-04-17 18:06:22	337-126	с. Магас, пер. Минский, д. 224, 803697
+79	7815897433	респ. Калмыкия	2011-08-12 09:48:09	389-508	клх Каргасок, ул. Портовая, д. 7 стр. 7, 910893
+80	1812403649	респ. Карелия	2010-07-12 15:06:49	860-833	г. Елец, ул. Кузнечная, д. 516 к. 8/8, 727309
+81	4216686340	Краснодарский край	2014-08-15 06:16:45	330-229	г. Верхний Баскунчак, наб. Придорожная, д. 838 стр. 87, 874791
+82	1045447924	Орловская обл.	2010-04-09 05:41:29	849-185	д. Приозерск, алл. Энергетиков, д. 1/7, 823917
+83	4303601293	Ханты-Мансийский АО	1981-04-17 14:14:47	742-101	с. Петрозаводск, бул. Добролюбова, д. 28 к. 679, 294953
+84	1585505552	Ненецкий АО	1973-08-06 18:09:31	973-121	клх Шаховская, наб. Ясная, д. 8 к. 4/8, 080296
+85	4650466594	респ. Северная Осетия - Алания	1994-09-28 08:35:51	903-808	клх Волгоград, ул. Менделеева, д. 6 стр. 176, 928138
+86	2597057133	Ненецкий АО	2006-06-08 12:47:25	997-641	с. Калининград, алл. Раздольная, д. 73 стр. 1/2, 458819
+87	1008340641	Смоленская обл.	2009-12-08 12:48:54	302-262	ст. Меренга, алл. Энергетиков, д. 4/1, 978435
+88	8256061110	Чукотский АО	1992-10-01 06:37:53	979-857	клх Всеволожск, алл. Чайкиной, д. 165, 500362
+89	8015386562	Волгоградская обл.	1980-05-15 01:24:02	675-188	п. Лазаревское, ш. Фрунзе, д. 3/9 стр. 8/7, 122729
+90	3029627830	Магаданская обл.	1990-08-20 02:01:10	220-684	д. Верхний Уфалей, ул. Осипенко, д. 6/3 к. 53, 900614
+91	7540859317	респ. Чечня	1983-06-09 22:58:23	956-839	к. Кижи, наб. Сурикова, д. 476 стр. 9/7, 065240
+92	6161665142	Еврейская АО	1997-07-18 13:25:32	172-163	к. Елатьма, алл. Ярославская, д. 15, 832640
+93	3618783144	Астраханская обл.	1997-10-02 09:41:37	382-533	г. Орск, алл. Высоцкого, д. 185 стр. 9/8, 972571
+94	4546121147	респ. Татарстан	2000-12-18 01:57:28	599-833	с. Джейрах, пер. Лазо, д. 22 стр. 6, 283738
+95	6800591479	респ. Хакасия	1987-09-12 03:09:15	457-918	к. Палана, пер. Новостройка, д. 378 к. 4/7, 080337
+96	2825439974	респ. Калмыкия	1970-04-30 04:23:51	323-354	д. Усть-Кулом, ул. Казачья, д. 9/4 к. 3/5, 267258
+97	9694130711	Камчатский край	1991-08-04 16:10:39	682-781	с. Тимашевск, пр. Грибоедова, д. 373 к. 5/1, 853411
+98	2819872772	Ханты-Мансийский АО	1978-12-30 09:25:21	688-664	д. Александровск-Сахалинский, алл. Матросова, д. 7 стр. 87, 881760
+99	8804553341	Ненецкий АО	1992-01-01 01:16:35	261-478	с. Нерчинск, пер. Вишневый, д. 8/7 к. 35, 470405
+100	8336977832	Хабаровский край	1988-12-17 09:15:22	606-125	с. Объячево, алл. Демьяна Бедного, д. 834 к. 6, 534109
+\.
+
+
+--
+-- Data for Name: student; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.student (student_id, student_full_name, student_telephone) FROM stdin;
+1	Василиса Даниловна Носкова	79765480907
+2	Ростислав Данилович Жуков	79783052380
+3	Волков Тихон Игнатьевич	79567450324
+4	г-н Никифоров Святополк Владленович	79839738523
+5	Игнатов Валерьян Гертрудович	79454196347
+6	Кондратьева Варвара Николаевна	79766580637
+7	Кудрявцева Ольга Артемовна	79300018648
+8	Трофимова Ирина Святославовна	79802989681
+9	тов. Федосеева Кира Оскаровна	79489318176
+10	Маргарита Вадимовна Уварова	79409362274
+11	Трофимов Ладислав Феоктистович	79203419065
+12	Елизавета Вадимовна Ильина	79536037555
+13	Юдина Дарья Ждановна	79616799625
+14	Чеслав Ефимьевич Данилов	79787402448
+15	Петрова Марина Васильевна	79538142663
+16	Якушева Нина Федоровна	79598411618
+17	Аверьян Теймуразович Куликов	79123977065
+18	Аксенов Вышеслав Адрианович	79593086026
+19	Мартынова Нонна Романовна	79830817494
+20	Януарий Филиппович Зимин	79123270292
+21	Игнатьев Афиноген Измаилович	79672485901
+22	Фомичев Август Валерьянович	79426998639
+23	Август Глебович Шилов	79831223012
+24	Козлова Евфросиния Игоревна	79517805775
+25	Мстислав Виленович Карпов	79152414432
+26	Агафонов Милен Евсеевич	79684411383
+27	Терентий Владиславович Хохлов	79139895746
+28	Олимпиада Борисовна Некрасова	79814693938
+29	Ларионова Оксана Аркадьевна	79604022502
+30	Федотова Татьяна Робертовна	79572305392
+31	Бирюкова Мария Степановна	79513440138
+32	Никифор Александрович Гришин	79819163912
+33	Кудрявцев Василий Бориславович	79254871057
+34	Савина Нинель Константиновна	79947123459
+35	Исай Иосифович Королев	79691790801
+36	Елисей Фомич Кириллов	79941730786
+37	Родионова Ия Харитоновна	79366584653
+38	Лапин Борис Фомич	79765279566
+39	Маслова Екатерина Львовна	79786285302
+40	Елена Руслановна Уварова	79134754332
+41	Горбунова Людмила Макаровна	79804558415
+42	Гордеев Болеслав Владиславович	79444305109
+43	Бажен Артёмович Рожков	79476403526
+44	Вышеслав Феоктистович Одинцов	79883697044
+45	Валерьян Елисеевич Федоров	79227925753
+46	Калашникова Кира Михайловна	79445238455
+47	Ираклий Игнатович Егоров	79647911628
+48	Доронина Татьяна Алексеевна	79804239425
+49	Харитонова Татьяна Сергеевна	79516305722
+50	Титова Алевтина Кирилловна	79759027376
+\.
+
+
+--
+-- Data for Name: user_type; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.user_type (user_type_id, user_type_name) FROM stdin;
+1	Администратор системы
+2	Преподаватель
+3	Пользователь
+4	Администратор (заключатель договоров)
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.users (user_id, full_name, user_login, user_password) FROM stdin;
+1	Иванов Иван Иванович	ivanov_ii	ivanov_ii
+2	Петров Петр Петрович	petrov_pp	petrov_pp
+3	Сидоров Александр Сергеевич	sidorov_as	sidorov_as
+4	Жлуткин Роман Валерьевич	zlutkin_rv	zlutkin_rv
+\.
+
+
+--
+-- Data for Name: users_user_type; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.users_user_type (user_id, user_type_id) FROM stdin;
+1	2
+2	3
+3	4
+4	1
+\.
+
+
+--
+-- Name: contracts_contract_id_seq; Type: SEQUENCE SET; Schema: new_public; Owner: admin
+--
+
+SELECT pg_catalog.setval('new_public.contracts_contract_id_seq', 50, true);
+
+
+--
+-- Name: customer_customer_id_seq; Type: SEQUENCE SET; Schema: new_public; Owner: admin
+--
+
+SELECT pg_catalog.setval('new_public.customer_customer_id_seq', 50, true);
+
+
+--
+-- Name: passport_passport_id_seq; Type: SEQUENCE SET; Schema: new_public; Owner: admin
+--
+
+SELECT pg_catalog.setval('new_public.passport_passport_id_seq', 100, true);
+
+
+--
+-- Name: student_student_id_seq; Type: SEQUENCE SET; Schema: new_public; Owner: admin
+--
+
+SELECT pg_catalog.setval('new_public.student_student_id_seq', 50, true);
+
+
+--
+-- Name: user_type_user_type_id_seq; Type: SEQUENCE SET; Schema: new_public; Owner: admin
+--
+
+SELECT pg_catalog.setval('new_public.user_type_user_type_id_seq', 4, true);
+
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: new_public; Owner: admin
+--
+
+SELECT pg_catalog.setval('new_public.users_user_id_seq', 4, true);
+
+
+--
+-- Name: contracts_contract_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.contracts_contract_id_seq', 50, true);
+
+
+--
+-- Name: customer_customer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.customer_customer_id_seq', 50, true);
+
+
+--
+-- Name: passport_passport_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.passport_passport_id_seq', 100, true);
+
+
+--
+-- Name: student_student_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.student_student_id_seq', 50, true);
+
+
+--
+-- Name: user_type_user_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.user_type_user_type_id_seq', 4, true);
+
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.users_user_id_seq', 4, true);
+
+
+--
+-- Name: contracts contracts_pkey; Type: CONSTRAINT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.contracts
+    ADD CONSTRAINT contracts_pkey PRIMARY KEY (contract_id);
+
+
+--
+-- Name: customer_contracts customer_contracts_pkey; Type: CONSTRAINT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.customer_contracts
+    ADD CONSTRAINT customer_contracts_pkey PRIMARY KEY (contract_id, customer_id, student_id);
+
+
+--
+-- Name: customer customer_pkey; Type: CONSTRAINT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.customer
+    ADD CONSTRAINT customer_pkey PRIMARY KEY (customer_id);
+
+
+--
+-- Name: passport passport_pkey; Type: CONSTRAINT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.passport
+    ADD CONSTRAINT passport_pkey PRIMARY KEY (passport_id);
+
+
+--
+-- Name: student student_pkey; Type: CONSTRAINT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.student
+    ADD CONSTRAINT student_pkey PRIMARY KEY (student_id);
+
+
+--
+-- Name: user_type user_type_pkey; Type: CONSTRAINT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.user_type
+    ADD CONSTRAINT user_type_pkey PRIMARY KEY (user_type_id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: contracts contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT contracts_pkey PRIMARY KEY (contract_id);
+
+
+--
+-- Name: customer customer_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.customer
+    ADD CONSTRAINT customer_pkey PRIMARY KEY (customer_id);
+
+
+--
+-- Name: passport passport_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.passport
+    ADD CONSTRAINT passport_pkey PRIMARY KEY (passport_id);
+
+
+--
+-- Name: student student_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.student
+    ADD CONSTRAINT student_pkey PRIMARY KEY (student_id);
+
+
+--
+-- Name: user_type user_type_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.user_type
+    ADD CONSTRAINT user_type_pkey PRIMARY KEY (user_type_id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: contracts contracts_creator_id_fkey; Type: FK CONSTRAINT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.contracts
+    ADD CONSTRAINT contracts_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES new_public.users(user_id) ON DELETE SET NULL;
+
+
+--
+-- Name: customer_contracts customer_contracts_contract_id_fkey; Type: FK CONSTRAINT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.customer_contracts
+    ADD CONSTRAINT customer_contracts_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES new_public.contracts(contract_id) ON DELETE SET NULL;
+
+
+--
+-- Name: customer_contracts customer_contracts_customer_id_fkey; Type: FK CONSTRAINT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.customer_contracts
+    ADD CONSTRAINT customer_contracts_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES new_public.customer(customer_id) ON DELETE CASCADE;
+
+
+--
+-- Name: customer_contracts customer_contracts_student_id_fkey; Type: FK CONSTRAINT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.customer_contracts
+    ADD CONSTRAINT customer_contracts_student_id_fkey FOREIGN KEY (student_id) REFERENCES new_public.student(student_id) ON DELETE CASCADE;
+
+
+--
+-- Name: customer customer_passport_id_fkey; Type: FK CONSTRAINT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.customer
+    ADD CONSTRAINT customer_passport_id_fkey FOREIGN KEY (passport_id) REFERENCES new_public.passport(passport_id) ON DELETE SET NULL;
+
+
+--
+-- Name: users_user_type users_user_type_user_id_fkey; Type: FK CONSTRAINT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.users_user_type
+    ADD CONSTRAINT users_user_type_user_id_fkey FOREIGN KEY (user_id) REFERENCES new_public.users(user_id);
+
+
+--
+-- Name: users_user_type users_user_type_user_type_id_fkey; Type: FK CONSTRAINT; Schema: new_public; Owner: admin
+--
+
+ALTER TABLE ONLY new_public.users_user_type
+    ADD CONSTRAINT users_user_type_user_type_id_fkey FOREIGN KEY (user_type_id) REFERENCES new_public.user_type(user_type_id);
+
+
+--
+-- Name: contracts contracts_creator_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT contracts_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES public.users(user_id) ON DELETE SET NULL;
+
+
+--
+-- Name: customer customer_passport_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.customer
+    ADD CONSTRAINT customer_passport_id_fkey FOREIGN KEY (passport_id) REFERENCES public.passport(passport_id) ON DELETE SET NULL;
+
+
+--
+-- Name: contracts fk_orders_customers; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT fk_orders_customers FOREIGN KEY (customer_id) REFERENCES public.customer(customer_id);
+
+
+--
+-- Name: contracts fk_students; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.contracts
+    ADD CONSTRAINT fk_students FOREIGN KEY (student_id) REFERENCES public.student(student_id);
+
+
+--
+-- Name: users_user_type users_user_type_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.users_user_type
+    ADD CONSTRAINT users_user_type_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+--
+-- Name: users_user_type users_user_type_user_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.users_user_type
+    ADD CONSTRAINT users_user_type_user_type_id_fkey FOREIGN KEY (user_type_id) REFERENCES public.user_type(user_type_id);
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: admin
+--
+
+REVOKE USAGE ON SCHEMA public FROM PUBLIC;
+
+
+--
+-- Name: TABLE contracts; Type: ACL; Schema: new_public; Owner: admin
+--
+
+GRANT ALL ON TABLE new_public.contracts TO root;
+
+
+--
+-- Name: SEQUENCE contracts_contract_id_seq; Type: ACL; Schema: new_public; Owner: admin
+--
+
+GRANT ALL ON SEQUENCE new_public.contracts_contract_id_seq TO root;
+
+
+--
+-- Name: TABLE customer; Type: ACL; Schema: new_public; Owner: admin
+--
+
+GRANT ALL ON TABLE new_public.customer TO root;
+
+
+--
+-- Name: TABLE customer_contracts; Type: ACL; Schema: new_public; Owner: admin
+--
+
+GRANT ALL ON TABLE new_public.customer_contracts TO root;
+
+
+--
+-- Name: SEQUENCE customer_customer_id_seq; Type: ACL; Schema: new_public; Owner: admin
+--
+
+GRANT ALL ON SEQUENCE new_public.customer_customer_id_seq TO root;
+
+
+--
+-- Name: TABLE passport; Type: ACL; Schema: new_public; Owner: admin
+--
+
+GRANT ALL ON TABLE new_public.passport TO root;
+
+
+--
+-- Name: SEQUENCE passport_passport_id_seq; Type: ACL; Schema: new_public; Owner: admin
+--
+
+GRANT ALL ON SEQUENCE new_public.passport_passport_id_seq TO root;
+
+
+--
+-- Name: TABLE student; Type: ACL; Schema: new_public; Owner: admin
+--
+
+GRANT ALL ON TABLE new_public.student TO root;
+
+
+--
+-- Name: SEQUENCE student_student_id_seq; Type: ACL; Schema: new_public; Owner: admin
+--
+
+GRANT ALL ON SEQUENCE new_public.student_student_id_seq TO root;
+
+
+--
+-- Name: TABLE user_type; Type: ACL; Schema: new_public; Owner: admin
+--
+
+GRANT ALL ON TABLE new_public.user_type TO root;
+
+
+--
+-- Name: SEQUENCE user_type_user_type_id_seq; Type: ACL; Schema: new_public; Owner: admin
+--
+
+GRANT ALL ON SEQUENCE new_public.user_type_user_type_id_seq TO root;
+
+
+--
+-- Name: TABLE users; Type: ACL; Schema: new_public; Owner: admin
+--
+
+GRANT ALL ON TABLE new_public.users TO root;
+
+
+--
+-- Name: SEQUENCE users_user_id_seq; Type: ACL; Schema: new_public; Owner: admin
+--
+
+GRANT ALL ON SEQUENCE new_public.users_user_id_seq TO root;
+
+
+--
+-- Name: TABLE users_user_type; Type: ACL; Schema: new_public; Owner: admin
+--
+
+GRANT ALL ON TABLE new_public.users_user_type TO root;
+
+
+--
+-- Name: TABLE contracts; Type: ACL; Schema: public; Owner: admin
+--
+
+GRANT ALL ON TABLE public.contracts TO root;
+
+
+--
+-- Name: SEQUENCE contracts_contract_id_seq; Type: ACL; Schema: public; Owner: admin
+--
+
+GRANT ALL ON SEQUENCE public.contracts_contract_id_seq TO root;
+
+
+--
+-- Name: TABLE customer; Type: ACL; Schema: public; Owner: admin
+--
+
+GRANT ALL ON TABLE public.customer TO root;
+
+
+--
+-- Name: SEQUENCE customer_customer_id_seq; Type: ACL; Schema: public; Owner: admin
+--
+
+GRANT ALL ON SEQUENCE public.customer_customer_id_seq TO root;
+
+
+--
+-- Name: TABLE passport; Type: ACL; Schema: public; Owner: admin
+--
+
+GRANT ALL ON TABLE public.passport TO root;
+
+
+--
+-- Name: SEQUENCE passport_passport_id_seq; Type: ACL; Schema: public; Owner: admin
+--
+
+GRANT ALL ON SEQUENCE public.passport_passport_id_seq TO root;
+
+
+--
+-- Name: TABLE student; Type: ACL; Schema: public; Owner: admin
+--
+
+GRANT ALL ON TABLE public.student TO root;
+
+
+--
+-- Name: SEQUENCE student_student_id_seq; Type: ACL; Schema: public; Owner: admin
+--
+
+GRANT ALL ON SEQUENCE public.student_student_id_seq TO root;
+
+
+--
+-- Name: TABLE user_type; Type: ACL; Schema: public; Owner: admin
+--
+
+GRANT ALL ON TABLE public.user_type TO root;
+
+
+--
+-- Name: SEQUENCE user_type_user_type_id_seq; Type: ACL; Schema: public; Owner: admin
+--
+
+GRANT ALL ON SEQUENCE public.user_type_user_type_id_seq TO root;
+
+
+--
+-- Name: TABLE users; Type: ACL; Schema: public; Owner: admin
+--
+
+GRANT ALL ON TABLE public.users TO root;
+
+
+--
+-- Name: SEQUENCE users_user_id_seq; Type: ACL; Schema: public; Owner: admin
+--
+
+GRANT ALL ON SEQUENCE public.users_user_id_seq TO root;
+
+
+--
+-- Name: TABLE users_user_type; Type: ACL; Schema: public; Owner: admin
+--
+
+GRANT ALL ON TABLE public.users_user_type TO root;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
