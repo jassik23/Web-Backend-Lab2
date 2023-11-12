@@ -1,5 +1,6 @@
 # Web-Backend-Lab2
 
+<img src="/images/PostgreSQL.jpg" width=500><img src="/images/Docker.jpg" width=500>
 
 ## Описание предметной области
 
